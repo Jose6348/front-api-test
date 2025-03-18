@@ -1,24 +1,74 @@
-# front-api-test
+# Sistema de Estatísticas
 
-## Project setup
-```
+Sistema frontend desenvolvido em Vue.js para visualização de estatísticas de uso de uma aplicação, com controle de acesso baseado em perfis de usuário.
+
+## Funcionalidades
+
+### Perfis de Usuário
+
+#### Admin
+- Visualiza todas as estatísticas
+- Acesso total ao sistema
+
+#### Desenvolvedor
+- Downloads
+- Avaliações
+- Erros
+- Novas Funcionalidades
+
+#### Recursos Humanos
+- Avaliações
+- Gerenciamento de Perfis
+- Gerenciamento de Usuários
+
+## Requisitos
+
+- Node.js (versão 14 ou superior)
+- npm (versão 6 ou superior)
+
+## Instalação
+
+1. Clone o repositório
+2. Instale as dependências:
+```bash
 npm install
 ```
 
-### Compiles and hot-reloads for development
-```
+## Executando o Projeto
+
+Para desenvolvimento:
+```bash
 npm run serve
 ```
 
-### Compiles and minifies for production
-```
+Para produção:
+```bash
 npm run build
 ```
 
-### Lints and fixes files
+## Estrutura do Projeto
+
 ```
-npm run lint
+src/
+├── assets/          # Recursos estáticos
+├── components/      # Componentes reutilizáveis
+├── router/         # Configuração de rotas
+├── store/          # Gerenciamento de estado (Vuex)
+├── views/          # Páginas/Views da aplicação
+├── App.vue         # Componente raiz
+└── main.js         # Ponto de entrada da aplicação
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Tecnologias Utilizadas
+
+- Vue.js 3
+- Vue Router
+- Vuex
+- Element Plus
+- Axios
+
+## Notas
+
+- Todos os usuários são criados com a senha padrão: 12345678
+- O sistema utiliza autenticação baseada em tokens
+- As permissões são controladas por perfil de usuário
