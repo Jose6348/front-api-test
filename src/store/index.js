@@ -35,6 +35,7 @@ export default createStore({
       state.profiles = profiles
     },
     clearAllData(state) {
+      state.user = null
       state.statistics = {
         downloads: [],
         evaluations: [],
@@ -49,31 +50,31 @@ export default createStore({
     async login({ commit }, credentials) {
       try {
         const response = await authService.login(credentials)
-        const { access_token, user } = response.data
-        localStorage.setItem('token', access_token)
+        const { token, user } = response.data
+        
+        // Salvar token
+        localStorage.setItem('token', token)
+        
+        // Salvar usuário no state e localStorage
         commit('setUser', user)
-        return user
+        
+        return response
       } catch (error) {
-        console.error('Erro no login:', error)
         throw error
       }
     },
+    
     async logout({ commit }) {
       try {
-        // Limpa todos os dados primeiro
-        commit('clearAllData')
-        commit('clearUser')
-        
-        // Limpa o localStorage
-        localStorage.clear()
-        
-        // Por fim, chama o serviço de logout
+        // Tentar fazer logout no backend
         await authService.logout()
       } catch (error) {
-        console.error('Erro ao fazer logout:', error)
-        // Força a limpeza mesmo em caso de erro
-        localStorage.clear()
-        throw error
+        console.error('Erro ao fazer logout no servidor:', error)
+      } finally {
+        // Independente da resposta do servidor, limpar dados locais
+        commit('clearAllData')
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
       }
     },
     async fetchStatistics({ commit, state }, type) {
