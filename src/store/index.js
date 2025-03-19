@@ -52,10 +52,7 @@ export default createStore({
         const response = await authService.login(credentials)
         const { token, user } = response.data
         
-        // Salvar token
         localStorage.setItem('token', token)
-        
-        // Salvar usuário no state e localStorage
         commit('setUser', user)
         
         return response
@@ -66,17 +63,16 @@ export default createStore({
     
     async logout({ commit }) {
       try {
-        // Tentar fazer logout no backend
         await authService.logout()
       } catch (error) {
         console.error('Erro ao fazer logout no servidor:', error)
       } finally {
-        // Independente da resposta do servidor, limpar dados locais
         commit('clearAllData')
         localStorage.removeItem('token')
         localStorage.removeItem('user')
       }
     },
+
     async fetchStatistics({ commit, state }, type) {
       if (!state.user) return
       
@@ -103,9 +99,8 @@ export default createStore({
         throw error
       }
     },
-    async fetchUsers({ commit, state }) {
-      if (!state.user) return
-      
+
+    async fetchUsers({ commit }) {
       try {
         const response = await userService.getAll()
         commit('setUsers', response.data)
@@ -115,9 +110,8 @@ export default createStore({
         throw error
       }
     },
-    async fetchProfiles({ commit, state }) {
-      if (!state.user) return
-      
+
+    async fetchProfiles({ commit }) {
       try {
         const response = await profileService.getAll()
         commit('setProfiles', response.data)
@@ -130,18 +124,25 @@ export default createStore({
   },
   getters: {
     isAuthenticated: state => !!state.user && !!localStorage.getItem('token'),
-    userRole: state => state.user?.role,
+    
     hasPermission: (state) => (permission) => {
-      if (!state.user) return false
+      if (!state.user?.profile) return false
       
-      const role = state.user.role
-      const permissions = {
-        admin: ['all'],
-        developer: ['downloads', 'evaluations', 'errors', 'newFeatures'],
-        hr: ['evaluations', 'users', 'profiles']
+      // Se for Admin, tem todas as permissões
+      if (state.user.profile.name === 'Admin') return true
+      
+      // Mapeamento de IDs de permissões
+      const permissionMap = {
+        'downloads': 1,
+        'evaluations': 2,
+        'errors': 3,
+        'newFeatures': 4,
+        'users': 5,
+        'profiles': 6
       }
       
-      return permissions[role]?.includes(permission) || false
+      const permissionId = permissionMap[permission]
+      return state.user.profile.permissions?.some(p => p.id === permissionId) || false
     }
   }
 }) 

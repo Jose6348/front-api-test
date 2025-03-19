@@ -1,9 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/Login.vue'
 import DashboardView from '../views/Dashboard.vue'
-import UserManagement from '../views/UserManagement.vue'
-import ProfileManagement from '../views/ProfileManagement.vue'
-import StatisticsView from '../views/Statistics.vue'
 import SettingsView from '../views/Settings.vue'
 
 const routes = [
@@ -23,24 +20,6 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/users',
-    name: 'UserManagement',
-    component: UserManagement,
-    meta: { requiresAuth: true, roles: ['admin', 'hr'] }
-  },
-  {
-    path: '/profiles',
-    name: 'ProfileManagement',
-    component: ProfileManagement,
-    meta: { requiresAuth: true, roles: ['hr'] }
-  },
-  {
-    path: '/statistics',
-    name: 'StatisticsView',
-    component: StatisticsView,
-    meta: { requiresAuth: true }
-  },
-  {
     path: '/configuracoes',
     name: 'settings',
     component: SettingsView,
@@ -55,7 +34,7 @@ const router = createRouter({
 
 // Navigation guard
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = localStorage.getItem('token') // You can adjust this based on your auth logic
+  const isAuthenticated = localStorage.getItem('token')
   
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!isAuthenticated) {
