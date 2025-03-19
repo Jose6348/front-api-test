@@ -60,6 +60,7 @@
                   <span v-if="hasPermission(profile, 'downloads')" class="permission-tag">Downloads</span>
                   <span v-if="hasPermission(profile, 'evaluations')" class="permission-tag">Avaliações</span>
                   <span v-if="hasPermission(profile, 'errors')" class="permission-tag">Erros</span>
+                  <span v-if="hasPermission(profile, 'feedbacks')" class="permission-tag">Feedbacks</span>
                   <span v-if="hasPermission(profile, 'newFeatures')" class="permission-tag">Novas Funcionalidades</span>
                 </template>
               </td>
@@ -363,7 +364,7 @@ export default {
           permissions = [1, 2, 3, 4, 5] // IDs de todas as permissões
         } else if (newProfile.type === 'Desenvolvedor') {
           // Desenvolvedor tem acesso a Downloads, Avaliações, Erros e Novas Funcionalidades
-          permissions = [1, 2, 3, 4] // IDs das permissões específicas
+          permissions = [1, 2, 3, 5] // IDs das permissões específicas
         } else if (newProfile.type === 'Recursos Humanos') {
           // RH tem acesso apenas a Avaliações
           permissions = [2] // ID da permissão de Avaliações
@@ -416,7 +417,8 @@ export default {
         'downloads': 1,
         'evaluations': 2,
         'errors': 3,
-        'newFeatures': 4
+        'feedbacks': 4,
+        'newFeatures': 5
       }
 
       const permissionId = permissionMap[permission]

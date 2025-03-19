@@ -136,9 +136,8 @@ export default createStore({
         'downloads': 1,
         'evaluations': 2,
         'errors': 3,
-        'newFeatures': 4,
-        'users': 5,
-        'profiles': 6
+        'feedbacks': 4,
+        'newFeatures': 5
       }
       
       const permissionId = permissionMap[permission]
