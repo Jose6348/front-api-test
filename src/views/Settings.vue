@@ -7,18 +7,23 @@
       </div>
       
       <nav class="nav-menu">
-        <router-link to="/dashboard" class="nav-item">
-          <i class="fas fa-chart-line"></i>
-          Dashboard
-        </router-link>
-        <router-link to="/configuracoes" class="nav-item active">
-          <i class="fas fa-cog"></i>
-          Configurações
-        </router-link>
-        <router-link to="/logout" class="nav-item logout">
-          <i class="fas fa-sign-out-alt"></i>
-          Sair
-        </router-link>
+        <div class="nav-top">
+          <router-link to="/dashboard" class="nav-item">
+            <img src="@/assets/layout-fluido 1.png" alt="Dashboard" class="nav-icon" />
+            Dashboard
+          </router-link>
+        </div>
+        
+        <div class="nav-bottom">
+          <router-link to="/configuracoes" class="nav-item active">
+            <img src="@/assets/settings (1) 1.png" alt="Configurações" class="nav-icon" />
+            Configurações
+          </router-link>
+          <a @click="handleLogout" class="nav-item logout" style="cursor: pointer;">
+            <img src="@/assets/sign-out-alt 1.png" alt="Sair" class="nav-icon" />
+            Sair
+          </a>
+        </div>
       </nav>
     </aside>
 
@@ -209,6 +214,8 @@ import { ref, reactive, onMounted } from 'vue'
 import NewUserModal from '@/components/NewUserModal.vue'
 import EditUserModal from '../components/EditUserModal.vue'
 import { userService, profileService } from '@/services/api'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
 export default {
   name: 'SettingsView',
@@ -217,6 +224,8 @@ export default {
     EditUserModal
   },
   setup() {
+    const router = useRouter()
+    const store = useStore()
     const showNewProfileModal = ref(false)
     const showNewUserModal = ref(false)
     const showEditUserModal = ref(false)
@@ -414,6 +423,22 @@ export default {
       return profile.permissions?.some(p => p.id === permissionId)
     }
 
+    const handleLogout = async () => {
+      try {
+        // Limpar dados do store
+        await store.dispatch('logout')
+        // Limpar localStorage
+        localStorage.clear()
+        // Redirecionar para login
+        router.replace('/login')
+      } catch (error) {
+        console.error('Erro ao fazer logout:', error)
+        // Mesmo com erro, limpar dados e redirecionar
+        localStorage.clear()
+        router.replace('/login')
+      }
+    }
+
     // Carregar dados ao montar o componente
     onMounted(fetchData)
 
@@ -433,7 +458,8 @@ export default {
       handleDeleteUser,
       editUser,
       getUserCountByProfile,
-      hasPermission
+      hasPermission,
+      handleLogout
     }
   }
 }
@@ -453,6 +479,11 @@ export default {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .logo-section {
@@ -477,7 +508,19 @@ export default {
 .nav-menu {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  height: calc(100vh - 180px); /* Ajusta a altura considerando o logo */
+}
+
+.nav-top {
+  flex: 1;
+}
+
+.nav-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+  padding-bottom: 24px;
 }
 
 .nav-item {
@@ -502,15 +545,16 @@ export default {
 
 .logout {
   margin-top: auto;
-  color: #DC2626;
+  color: #010101;
 }
 
 .main-content {
   flex: 1;
-  padding: 32px;
+  padding: 32px 40px;
   display: flex;
   flex-direction: column;
   gap: 32px;
+  margin-left: 284px; /* 244px (largura da sidebar) + 40px de espaço */
 }
 
 .main-content h1 {
@@ -817,5 +861,15 @@ input:checked + .toggle-slider:before {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.platform-icon {
+  width: 16px;
+  height: 16px;
 }
 </style> 

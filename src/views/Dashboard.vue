@@ -7,18 +7,23 @@
       </div>
       
       <nav class="nav-menu">
-        <router-link to="/dashboard" class="nav-item active">
-          <i class="fas fa-chart-line"></i>
-          Dashboard
-        </router-link>
-        <router-link to="/configuracoes" class="nav-item">
-          <i class="fas fa-cog"></i>
-          Configurações
-        </router-link>
-        <router-link to="/logout" class="nav-item logout">
-          <i class="fas fa-sign-out-alt"></i>
-          Sair
-        </router-link>
+        <div class="nav-top">
+          <router-link to="/dashboard" class="nav-item active">
+            <img src="@/assets/layout-fluido 1.png" alt="Dashboard" class="nav-icon" />
+            Dashboard
+          </router-link>
+        </div>
+        
+        <div class="nav-bottom">
+          <router-link to="/configuracoes" class="nav-item">
+            <img src="@/assets/settings (1) 1.png" alt="Configurações" class="nav-icon" />
+            Configurações
+          </router-link>
+          <a @click="handleLogout" class="nav-item logout" style="cursor: pointer;">
+            <img src="@/assets/sign-out-alt 1.png" alt="Sair" class="nav-icon" />
+            Sair
+          </a>
+        </div>
       </nav>
     </aside>
 
@@ -30,24 +35,49 @@
           <div v-if="hasPermission('downloads')" class="stat-card">
             <div class="stat-header">
               <h3>Downloads</h3>
-              <i class="fas fa-download"></i>
+              <img src="@/assets/cloud-download-alt (1) 1.png" alt="Downloads" class="nav-icon" />
             </div>
             <div class="stat-number">330</div>
             <div class="stat-details">
-              <span class="android"><i class="fab fa-android"></i> 240</span>
-              <span class="ios"><i class="fab fa-apple"></i> 90</span>
+              <span class="android">
+                <img src="@/assets/android 1.png" alt="Android" class="platform-icon" /> 240
+              </span>
+              <span class="ios">
+                <img src="@/assets/apple 1.png" alt="Apple" class="platform-icon" /> 90
+              </span>
             </div>
           </div>
 
           <div v-if="hasPermission('evaluations')" class="stat-card">
             <div class="stat-header">
               <h3>Avaliações</h3>
-              <i class="fas fa-star"></i>
+              <img src="@/assets/star-comment-alt 1.png" alt="Avaliações" class="nav-icon" />
             </div>
             <div class="stat-number">4.2<span class="total">/5</span></div>
             <div class="stat-details">
-              <span class="android"><i class="fab fa-android"></i> 5.0</span>
-              <span class="ios"><i class="fab fa-apple"></i> 4.0</span>
+              <span class="android">
+                <img src="@/assets/android 1.png" alt="Android" class="platform-icon" /> 5.0
+              </span>
+              <span class="ios">
+                <img src="@/assets/apple 1.png" alt="Apple" class="platform-icon" /> 4.0
+              </span>
+            </div>
+          </div>
+
+          <div v-if="hasPermission('errors')" class="stat-card">
+            <div class="stat-header">
+              <h3>Erros</h3>
+              <img src="@/assets/times-hexagon (1) 1.png" alt="Erros" class="nav-icon" />
+            </div>
+            <div class="stat-number">4</div>
+            <div class="stat-details">
+              <span class="android">
+                <img src="@/assets/android 1.png" alt="Android" class="platform-icon" /> 2
+              </span>
+              <span class="ios">
+                <img src="@/assets/apple 1.png" alt="Apple" class="platform-icon" /> 1
+              </span>
+              <span class="percentage">-5%</span>
             </div>
           </div>
         </div>
@@ -98,11 +128,31 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { userService } from '@/services/api'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
 export default {
   name: 'DashboardView',
   setup() {
     const currentUser = ref(null)
+    const router = useRouter()
+    const store = useStore()
+
+    const handleLogout = async () => {
+      try {
+        // Limpar dados do store
+        await store.dispatch('logout')
+        // Limpar localStorage
+        localStorage.clear()
+        // Redirecionar para login
+        router.replace('/login')
+      } catch (error) {
+        console.error('Erro ao fazer logout:', error)
+        // Mesmo com erro, limpar dados e redirecionar
+        localStorage.clear()
+        router.replace('/login')
+      }
+    }
 
     const fetchCurrentUser = async () => {
       try {
@@ -192,7 +242,8 @@ export default {
 
     return {
       currentUser,
-      hasPermission
+      hasPermission,
+      handleLogout
     }
   }
 }
@@ -212,6 +263,11 @@ export default {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .logo-section {
@@ -236,7 +292,19 @@ export default {
 .nav-menu {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  height: calc(100vh - 180px); /* Ajusta a altura considerando o logo */
+}
+
+.nav-top {
+  flex: 1;
+}
+
+.nav-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+  padding-bottom: 24px;
 }
 
 .nav-item {
@@ -261,21 +329,23 @@ export default {
 
 .logout {
   margin-top: auto;
-  color: #DC2626;
+  color: #000000;
 }
 
 .main-content {
   flex: 1;
-  padding: 32px;
+  padding: 32px 40px;
   display: flex;
   flex-direction: column;
   gap: 32px;
+  margin-left: 284px; /* 244px (largura da sidebar) + 40px de espaço */
 }
 
 .statistics-section h1 {
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 24px;
+  color: #111827;
 }
 
 .stats-cards {
@@ -316,6 +386,18 @@ export default {
 .stat-details {
   display: flex;
   gap: 24px;
+  align-items: center;
+  width: 100%;
+}
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.platform-icon {
+  width: 16px;
+  height: 16px;
 }
 
 .android, .ios {
@@ -323,6 +405,16 @@ export default {
   align-items: center;
   gap: 8px;
   color: #666;
+}
+
+.error-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.percentage {
+  color: #22C55E;
+  margin-left: auto;
 }
 
 .feedback-section {
