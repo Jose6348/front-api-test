@@ -1,13 +1,15 @@
 import axios from 'axios'
 
-const CLIENT_ID = '9e768069-48c4-454a-afbf-07120b7da501'
-const CLIENT_SECRET = 'LCw7BmM1bZ0aNMcEprevuuirc9TtvKbbfzlNvO39'
+const CLIENT_ID = '9e7ac348-c911-469f-942b-d21d89729e62'
+const CLIENT_SECRET = '0KuIhFfs4xHR2iiDkjnxj4c58GYGo0KjeHeCW1wJ'
 
 const api = axios.create({
+  baseURL: 'http://localhost:8084',
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
-  }
+  },
+  withCredentials: true
 })
 
 // Interceptor para adicionar o token em todas as requisições
@@ -44,7 +46,7 @@ export const authService = {
       formData.append('scope', '')
 
       // Fazer login e obter token
-      const response = await axios.post('/oauth/token', formData, {
+      const response = await api.post('/oauth/token', formData, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           'Accept': 'application/json'
