@@ -4,12 +4,15 @@ const CLIENT_ID = '9e7ac348-c911-469f-942b-d21d89729e62'
 const CLIENT_SECRET = '0KuIhFfs4xHR2iiDkjnxj4c58GYGo0KjeHeCW1wJ'
 
 const api = axios.create({
-  baseURL: 'http://localhost:8084',
+  baseURL: '',
   headers: {
     'Content-Type': 'application/json',
-    'Accept': 'application/json'
+    'Accept': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+    'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
   },
-  withCredentials: true
+  withCredentials: false
 })
 
 // Interceptor para adicionar o token em todas as requisições
@@ -46,7 +49,7 @@ export const authService = {
       formData.append('scope', '')
 
       // Fazer login e obter token
-      const response = await api.post('/oauth/token', formData, {
+      const response = await axios.post('/oauth/token', formData, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           'Accept': 'application/json'
