@@ -12,15 +12,15 @@ Antes de começar, certifique-se de que:
 ## Credenciais de Acesso
 
 ### Admin (Acesso Total)
-- Email: admin@convicti.com.br
+- Email: junior@convicti.com.br
 - Senha: 12345678
 
 ### Desenvolvedor
-- Email: dev@convicti.com.br
+- Email: joao.lucas@convicti.com.br
 - Senha: 12345678
 
 ### Recursos Humanos
-- Email: hr@convicti.com.br
+- Email: cintia.lopes@convicti.com.br
 - Senha: 12345678
 
 ## Funcionalidades por Perfil
